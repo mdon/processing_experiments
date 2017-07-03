@@ -1,0 +1,205 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.js"></script>
+<!--    <script src="a.js"></script>  -->
+  <script>
+  "use strict";
+
+    var rectangles = [];
+    var ellipses = [];
+    var s = 20;
+    var movingPoint = null;
+    var n1 = 0;
+    var n2 = 0;
+    var v = -1;
+
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      var numberOfRectangles = 2;
+      var numberOfEllipses = 200;
+
+      //rects and ellipses
+
+      console.log(windowWidth);
+      console.log(windowHeight);
+
+      var numOfCycles = 0;
+      while (rectangles.length < numberOfRectangles && numOfCycles < 100) {
+        numOfCycles++;
+
+        var x = int(random(0, windowWidth-100));
+        var y = int(random(0, windowHeight-100));
+
+        var rec = {
+          x: x,
+          y: y,
+          w: int(random(45, windowWidth-x)),
+          h: int(random(45, windowHeight-y))
+        };
+
+        console.log(rec);
+
+        if (rectangles.length == 0) {
+          rectangles.push(rec);
+        } else {
+          console.log(rectangles.length);
+          var overlap = true;
+
+          for (var m = 0; m < rectangles.length; m++) {
+            if (rec.x > (rectangles[m].x + rectangles[m].w)
+            || rec.y > (rectangles[m].y + rectangles[m].h)
+            || rect.x + rect.w < rectangles[m].x
+            || rect.y + rect.h < rectangles[m].y) {
+              overlap = false;
+            } else {
+              console.log("skiping rectanble, it is overlapping...");
+            }
+          }
+
+          if (overlap == false) {
+            rectangles.push(rec);
+          }
+        }
+      }
+
+      var n = 0;
+      numOfCycles = 0;
+      while (ellipses.length < numberOfEllipses && numOfCycles < 100) {
+        numOfCycles++;
+
+        var el = {
+          x: int(random(0, windowWidth)),
+          y: int(random(0, windowHeight)),
+          n: n,
+          s: s,
+          status: "alive"
+        };
+
+        var overlap = false;
+
+        for (var i = 0; i < rectangles.length && !overlap; i++) {
+          if (el.x + s < rectangles[i].x || el.y + s < rectangles[i].y || el.x - s > rectangles[i].x + rectangles[i].w || el.y - s > rectangles[i].y + rectangles[i].h) {
+             for (var m = 0; m < ellipses.length; m++) {
+              if (! int(dist(el.x, el.y, ellipses[m].x, ellipses[m].y) >= s*2)) {
+                console.log("circle is on the circle, skipping...");
+                overlap = true;
+              }
+            }
+          } else {
+            console.log("circle is on the box, skipping...");
+            overlap = true;
+          }
+        }
+
+        if (!overlap) {
+          ellipses.push(el);
+          console.log("vse cool... adding: n - " + n + ", x: " + el.x + ", y: " + el.y)
+          n++;
+        } else {
+          //fill(0, 255, 0);
+          //ellipse(el.x, el.y, 25);
+        }
+      }
+    }
+
+    function draw() {
+      background("white")
+      //stroke("blue")
+
+      for (var m = 0; m < ellipses.length; m++) {
+        fill("red");
+        ellipse(ellipses[m].x, ellipses[m].y, int(ellipses[m].s));
+        //fill("white");
+        //text(ellipses[m].n, ellipses[m].x-5, ellipses[m].y+3);
+
+
+        if (v > -1 && ellipses[v].status == "dying") {
+          ellipses[v].s = ellipses[v].s - 1;
+          //console.log(ellipses[v].s);
+
+          if (ellipses[v].s < 0) {
+            //console.log("deleting: " + ellipses[m].n);
+            ellipses.splice(ellipses[v].n, 1);
+
+            var tmp = "";
+            ellipses.map(function (p) { tmp += p.n + " | "; })
+
+            for (var a = 0; a < ellipses.length; a++) {
+              ellipses[a].n = a;
+            }
+            console.log(tmp);
+
+
+
+            v = -1;
+          }
+
+
+        }
+
+      }
+
+      fill(0, 0, 255, 90);
+
+      for (var m = 0; m < rectangles.length; m++) {
+        if (m == 0) {
+          rect(rectangles[m].x-n1, rectangles[m].y-n1,
+               rectangles[m].w+n1, rectangles[m].h+n1);
+        } else {
+          rect(rectangles[m].x-n2, rectangles[m].y-n2,
+               rectangles[m].w+n2, rectangles[m].h+n2);
+        }
+      }
+
+    }
+
+    function mouseDragged() {
+      if (movingPoint !== null) {
+          ellipses[movingPoint].x = mouseX;
+          ellipses[movingPoint].y = mouseY;
+      }
+    }
+
+    function mousePressed() {
+      ellipses.map(function(p) {
+        if (int(dist(p.x, p.y, mouseX, mouseY)) <= 10) {
+            movingPoint = p.n;
+            //console.log("movingPoint = " + p.n);
+        }
+      });
+    }
+
+    function mouseReleased() {
+      movingPoint = null;
+      for (var i = 0; i < rectangles.length; i++) {
+        for (var m = 0; m < ellipses.length; m++) {
+          if (ellipses[m].x + s > rectangles[i].x
+              && ellipses[m].y + s > rectangles[i].y
+              && ellipses[m].x - s < rectangles[i].x + rectangles[i].w
+              && ellipses[m].y - s < rectangles[i].y + rectangles[i].h)
+          {
+            ellipses[m].status = "dying";
+            v = ellipses[m].n;
+
+            if (i == 0) {
+              n1++;
+            } else {
+              n2++;
+            }
+
+          }
+        }
+      }
+    }
+  </script>
+  </head>
+  <body>
+
+  </body>
+</html>
