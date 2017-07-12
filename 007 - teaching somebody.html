@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.js"></script>
+<!--    <script src="a.js"></script>  -->
+  <script>
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+    }
+
+    function draw() {
+      opacity = (mouseX/windowWidth*100);
+      background("red")
+      fill(0, 0, 255, opacity)
+      rect(50, 50, 300, 300)
+    }
+  </script>
+  </head>
+  <body>
+
+  </body>
+</html>

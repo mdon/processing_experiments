@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.js"></script>
+<!--    <script src="a.js"></script>  -->
+  <script>
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      newLine = false;
+      fromX = 0;
+      fromY = 0;
+      lines = [];
+      movingPointIndex = -1;
+    }
+
+    function draw() {
+      background("white")
+      stroke("blue")
+
+      for (i = 0; i < lines.length; i = i + 4) {
+        line(lines[i], lines[i+1], lines[i+2], lines[i+3])
+
+        if (int(dist(lines[i], lines[i+1], mouseX, mouseY)) <= 10)
+          ellipse(lines[i], lines[i+1], 10);
+
+        if (int(dist(lines[i+2], lines[i+3], mouseX, mouseY)) <= 10)
+          ellipse(lines[i+2], lines[i+3], 10);
+        }
+
+      if (newLine) {
+        stroke("red")
+        line(fromX, fromY, mouseX, mouseY);
+        ellipse(fromX, fromY, 5);
+      }
+    }
+
+
+    function mouseDragged() {
+      if (movingPointIndex > -1) {
+        lines[movingPointIndex] = mouseX;
+        lines[movingPointIndex+1] = mouseY;
+      }
+    }
+
+    function mousePressed() {
+      console.log("mouse pressed");
+      for (i = 0; i < lines.length; i = i + 4) {
+        if (movingPointIndex == -1) {
+          if (int(dist(lines[i], lines[i+1], mouseX, mouseY)) <= 10) {
+            movingPointIndex = i;
+          }
+
+          if (int(dist(lines[i+2], lines[i+3], mouseX, mouseY)) <= 10) {
+            movingPointIndex = i+2;
+          }
+        }
+      }
+
+
+      if (movingPointIndex == -1) {
+        console.log("no existing point clicked");
+        if (newLine == false)  {
+          fromX = mouseX;
+          fromY = mouseY;
+          newLine = true;
+        } else {
+          lines.push(fromX);
+          lines.push(fromY);
+          lines.push(mouseX);
+          lines.push(mouseY);
+          newLine = false;
+        }
+      } else {
+        console.log("existing point clicked, point: " + movingPointIndex);
+      }
+
+    }
+
+    function mouseReleased() {
+      console.log("mouse released");
+      movingPointIndex = -1;
+    }
+  </script>
+  </head>
+  <body>
+
+  </body>
+</html>

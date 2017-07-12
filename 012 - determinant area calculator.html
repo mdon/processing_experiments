@@ -1,0 +1,111 @@
+<html>
+
+<head>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.js"></script>
+  <!--    <script src="a.js"></script>  -->
+  <script>
+    "use strict"
+
+    var dots = [];
+    var movingPoint = null;
+    var mouseOnDot = false;
+
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+    }
+
+    function draw() {
+      background("white")
+      stroke("blue")
+      //strokeWeight(20);
+
+      var k = 0;
+
+      dots.map(function(p) {
+        if (dots.length > 1) {
+          if (p.next) {
+            k = k + ((p.x * p.next.y - p.next.x * p.y)/2);
+          }
+        }
+        strokeWeight(5);
+        ellipse(p.x, p.y, 10)
+
+        point(p.x, p.y);
+        stroke("red")
+        strokeWeight(0);
+        text("id: " + p.i, p.x + 50, p.y)
+        text("x: " + p.x, p.x + 50, p.y + 10);
+        text("y: " + p.y, p.x + 50, p.y + 20);
+        stroke("blue")
+        //strokeWeight(5);
+        strokeWeight(5);
+        if (p.next) {
+          line(p.x, p.y, p.next.x, p.next.y);
+        }
+      });
+
+      k = abs(k);
+
+      strokeWeight(1);
+
+      text("Area: " + k, 10, 20);
+      text("Window width: " + windowWidth, 10, 30);
+      text("Window height: " + windowHeight, 10, 40);
+      text("Window area: " + windowHeight*windowWidth, 10, 50);
+    }
+
+    function mousePressed() {
+      dots.map(function(p) {
+        if (int(dist(p.x, p.y, mouseX, mouseY)) <= 10) {
+          movingPoint = p;
+          mouseOnDot = true;
+        }
+      });
+
+    }
+
+    function mouseClicked() {
+      if (mouseOnDot == false) {
+        var point = {
+          i: dots.length,
+          x: mouseX,
+          y: mouseY
+        };
+
+        if (dots.length >= 1) {
+          point.last = dots[dots.length - 1];
+          dots[dots.length - 1].next = point;
+          point.next = dots[0];
+          dots[0].last = point;
+        }
+
+        dots.push(point);
+      }
+
+      mouseOnDot = false;
+      movingPoint = null;
+    }
+
+    function mouseDragged() {
+      if (movingPoint) {
+        movingPoint.x = mouseX;
+        movingPoint.y = mouseY;
+      }
+    }
+
+    function mouseReleased() {
+
+    }
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>

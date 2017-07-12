@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.js"></script>
+<!--    <script src="a.js"></script>  -->
+  <script>
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      background(200, 200, 200);
+      X1 = 0;
+      Y1 = 0;
+      X2 = 0;
+      Y2 = 0;
+      P = 0;
+    }
+
+    function draw() {
+      if (mouseIsPressed) {
+        stroke(0, 0, 0);
+        strokeWeight(4);
+        ellipse(pmouseX, pmouseY, 5);
+        if (mouseButton == LEFT) {
+          P = 1;
+          X1 = mouseX;
+          Y1 = mouseY;
+        }
+        if (mouseButton == CENTER) {
+          P = 2;
+          X2 = mouseX;
+          Y2 = mouseY;
+        }
+      }
+      if (P == 1) {
+        strokeWeight(1);
+        stroke(255, 255, 255, 50);
+        line(X1, Y1, mouseX, mouseY);
+      }
+      if (P == 2) {
+        strokeWeight(1);
+        stroke(255, 255, 255, 50);
+        line(X2, Y2, mouseX, mouseY);
+      }
+//      line(pmouseX, pmouseY, mouseX, mouseY);
+//      ellipse(pmouseY, pmouseX, 5);
+
+
+      line(X1, Y1, X2, Y2);
+    }
+  </script>
+  </head>
+  <body>
+
+  </body>
+</html>

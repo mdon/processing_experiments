@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.js"></script>
+<!--    <script src="a.js"></script>  -->
+  <script>
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      dots = [];
+      movingPoint = null;
+      numberOfDots = 10;
+      firstDot = null;
+
+      for (i = 0; i < numberOfDots; i++) {             // generate dot cordinates
+        var point = {
+          i: i,
+          x:int(random(0, windowWidth)),
+          y:int(random(0, windowHeight))
+        };
+
+        if (i >= 1) {
+          point.last = dots[i-1];
+        }
+
+        if (i > 0) {
+          dots[i-1].next = point;
+        }
+
+        if (i == numberOfDots-1) {
+          point.next = dots[0];
+          dots[0].last = point;
+          //console.log(dots[0]);
+        }
+
+        dots.push(point);
+      }
+
+      //dots.map(function(x) {
+      //    console.log(x);
+      //})
+
+    }
+
+    function draw() {
+      background("white")
+      stroke("blue")
+      //strokeWeight(20);
+
+      dots.map(function(p) {
+        //strokeWeight(20);
+        point(p.x, p.y);
+        stroke("red")
+        text("id: " + p.i, p.x+50, p.y)
+        text("next: " + p.next.i, p.x+50, p.y+10)
+        text("last: " + p.last.i, p.x+50, p.y+20)
+        stroke("blue")
+        //strokeWeight(5);
+        if (p.next) {
+          line(p.x, p.y, p.next.x, p.next.y);
+        }
+      });
+    }
+
+    function mouseWheel() {
+      dots.map(function(p) {
+        if (int(dist(p.x, p.y, mouseX, mouseY)) <= 10) {
+          dots.splice(p.i, 1);
+
+          // renumber of i
+          for (i = 0; i<dots.length; i++) {
+            dots[i].i = i;
+          }
+
+          tmp = "";
+          dots.map(function (p) { tmp += p.i + " | "; })
+          console.log(tmp);
+          //console.log("deleting: " + p.i);
+          //console.log(p.last);
+          //console.log(p.next);
+          p.last.next = p.next;
+          p.next.last = p.last;
+          p.next.i = p.i;
+        }
+      });
+    }
+
+    function mouseDragged() {
+      if (movingPoint) {
+          movingPoint.x = mouseX;
+          movingPoint.y = mouseY;
+      }
+    }
+
+    function mousePressed() {
+      dots.map(function(p) {
+
+          if (int(dist(p.x, p.y, mouseX, mouseY)) <= 10) {
+              movingPoint = p;
+          }
+
+      });
+    }
+
+    function mouseReleased() {
+      movingPoint = null;
+    }
+  </script>
+  </head>
+  <body>
+
+  </body>
+</html>

@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.js"></script>
+<!--    <script src="a.js"></script>  -->
+  <script>
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      newLine = false;
+      fromX = 0;
+      fromY = 0;
+      lines = [];
+      DIsD = false;  //Dot Is Draged
+      DotX = 0;
+      DotY = 0;
+    }
+
+    function draw() {
+      console.log("array1: " + lines);
+      background("white")
+      stroke("blue")
+      //console.log(mouseX + ", " + mouseY);
+
+      for (i = 0; i < lines.length; i = i + 4) {
+        line(lines[i], lines[i+1], lines[i+2], lines[i+3]);
+
+        if (int(dist(lines[i], lines[i+1], mouseX, mouseY)) <= 10)
+          ellipse(lines[i], lines[i+1], 10);
+
+        if (int(dist(lines[i+2], lines[i+3], mouseX, mouseY)) <= 10)
+          ellipse(lines[i+2], lines[i+3], 10);
+
+        if (DIsD == false) {
+          if (mouseIsPressed) {
+            if (int(dist(lines[i], lines[i+1], mouseX, mouseY)) <= 10) {
+              //ellipse(mouseX, mouseY, 1);
+              DotX = i;
+              DotY = i+1;
+              DIsD = true;
+              console.log("DIsD set to true");
+            }
+
+            if (int(dist(lines[i+2], lines[i+3], mouseX, mouseY)) <= 10) {
+              //ellipse(mouseX, mouseY, 1);
+              ellipse(lines[i+2], lines[i+3], 10);
+              DotX = i+2;
+              DotY = i+3;
+              DIsD = true;
+              console.log("DIsD set to true");
+            }
+          }
+          //stroke("gray")
+          //line(mouseX, mouseY, lines[i], lines[i+1])
+          //line(mouseX, mouseY, lines[i+2], lines[i+3])
+          //text(abs(mouseX - lines[i]) + ", " + abs(mouseY - lines[i+1]), )
+        }
+
+      }
+
+        if (newLine) {
+          stroke("red")
+          line(fromX, fromY, mouseX, mouseY);
+          ellipse(fromX, fromY, 5);
+        }
+
+      if (DIsD == true) {
+        lines[DotX] = mouseX;
+        lines[DotY] = mouseY;
+      }
+
+    }
+
+    function mouseClicked() {
+      console.log("mouse clicked");
+      if (DIsD == false) {
+        if (newLine == false)  {
+          fromX = mouseX;
+          fromY = mouseY;
+          console.log("fromX: " + fromX + ", fromY: " + fromY);
+          newLine = true;
+        } else {
+          lines.push(fromX);
+          lines.push(fromY);
+          lines.push(mouseX);
+          lines.push(mouseY);
+          newLine = false;
+        }
+      }
+      ellipse(mouseX, mouseY, 5);
+      //console.log("array3: " + lines);
+    }
+
+    function mouseReleased() {
+      console.log("mouse released");
+      DIsD = false;
+    }
+  </script>
+  </head>
+  <body>
+
+  </body>
+</html>

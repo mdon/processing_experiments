@@ -1,0 +1,219 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.js"></script>
+<!--    <script src="a.js"></script>  -->
+  <script>
+    'use strict';
+
+    var determenant;
+    var newLine = false;
+    var fromX = 0;
+    var fromY = 0;
+    var points = [{x:100+400, y:100+200}, {x:496+400, y:193+200}, {x:150+400, y:100+200}, {x:350+400, y:253+200}];
+    var movingPointIndex = -1;
+
+    var s10_x, s10_y, s32_x, s32_y, s02_x, s02_y;
+    var determenant_is_positive, s_numer, t_numer, t;
+
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+
+    }
+
+    function draw() {
+      background("white")
+      stroke("blue")
+
+      for (var i = 0; i < points.length; i = i+2) {
+        //stroke("green");
+        //if (points[i+2] > points[i] && points[i+3] > points[i+1]) {
+        //  line(points[i]-((points[i+2]-points[i])*10), points[i+1]-((points[i+3]-points[i+1])*10),
+        //       points[i+2]+((points[i+2]-points[i])*10), points[i+3]+((points[i+3]-points[i+1])*10));
+        //} else {
+        //  line(points[i]+((points[i]-points[i+2])*10), points[i+1]+((points[i+1]-points[i+3])*10),
+        //       points[i+2]-((points[i]-points[i+2])*10), points[i+3]-((points[i+1]-points[i+3])*10));
+        //}
+
+        stroke("blue")
+        line(points[i].x, points[i].y, points[i+1].x, points[i+1].y);
+
+        if (int(dist(points[i].x, points[i].y, mouseX, mouseY)) <= 10)
+          ellipse(points[i].x, points[i].y, 10);
+
+        if (int(dist(points[i+1].x, points[i+1].y, mouseX, mouseY)) <= 10)
+          ellipse(points[i+1].x, points[i+1].y, 10);
+      }
+
+      if (newLine) {
+        stroke("red")
+        line(fromX, fromY, mouseX, mouseY);
+        ellipse(fromX, fromY, 5);
+      }
+
+      if (points.length == 4) { // 4 points for 2 lines
+        var intersection_point = find_intersection(points[0], points[1], points[2], points[3]);
+
+        if (intersection_point) {
+          ellipse(intersection_point.x, intersection_point.y, 5);
+        }
+      }
+
+      if (determenant) {
+        noStroke();
+        text("determenant: " + determenant, 10, 10);
+        text("determenant_is_positive: " + determenant_is_positive, 10, 20);
+        text("s_numer: " + s_numer, 10, 30);
+        text("t_numer: " + t_numer, 10, 40);
+        text("t: " + t, 10, 50);
+
+        stroke("lightgray");
+        fill("lightgray");
+        //stroke();
+
+        for (var i = 0; i<4; i++) {
+          noStroke();
+          text("p"+i+".x: " + points[i].x, points[i].x + 10, 10)
+          text("p"+i+".y: " + points[i].y, 7, points[i].y+13);
+          stroke("lightgray");
+          line(points[i].x, points[i].y, points[i].x, 0);
+          line(points[i].x, points[i].y, 0, points[i].y);
+        }
+
+        //s10_x
+        stroke(200,200,200);
+        line(points[0].x, 30, points[1].x, 30);
+        noStroke();
+        text("s10_x: " + s10_x, abs(s10_x)/2+points[0].x-25, 45);
+
+        //s10_y
+        stroke(200,200,200);
+        line(100, points[0].y, 100, points[1].y);
+        noStroke();
+        text("s10_y: " + s10_y, 105, abs(s10_y)/2+points[0].y);
+
+        //s32_x
+        stroke(200,200,200);
+        line(points[2].x, 50, points[3].x, 50);
+        noStroke();
+        text("s32_x: " + s32_x, abs(s32_x)/2+points[2].x-25, 65);
+
+        //s32_y
+        stroke(200,200,200);
+        line(30, points[2].y, 30, points[3].y);
+        noStroke();
+        text("s32_y: " + s32_y, 35, abs(s32_y)/2+points[2].y);
+
+        //s02_y
+        stroke(200,200,200);
+        line(points[0].x, points[0].y, points[0].x, points[2].y);
+        noStroke();
+        text("s02_y: " + s02_y, points[0].x+5, abs(s02_y)/2+points[0].y);
+
+        //s02_x
+        stroke(200,200,200);
+        line(points[2].x, points[2].y, points[0].x, points[2].y);
+        noStroke();
+        text("s02_x: " + s02_x, abs(s02_x)/2+points[2].x, points[2].y+15);
+      }
+    }
+
+    function mouseDragged() {
+      if (movingPointIndex > -1) {
+        points[movingPointIndex].x = mouseX;
+        points[movingPointIndex].y = mouseY;
+      }
+    }
+
+    function mousePressed() {
+      console.log("mouse pressed");
+      for (var i = 0; i < points.length; i = i + 2) {
+        if (movingPointIndex == -1) {
+          if (int(dist(points[i].x, points[i].y, mouseX, mouseY)) <= 10) {
+            movingPointIndex = i;
+          }
+
+          if (int(dist(points[i+1].x, points[i+1].y, mouseX, mouseY)) <= 10) {
+            movingPointIndex = i+1;
+          }
+        }
+      }
+
+
+      if (movingPointIndex == -1) {
+        console.log("no existing point clicked");
+        if (newLine == false)  {
+          fromX = mouseX;
+          fromY = mouseY;
+
+          newLine = true;
+        } else {
+          points.push({x: fromX, y: fromY });
+          points.push({x: mouseX, y: mouseY });
+          newLine = false;
+        }
+      } else {
+        console.log("existing point clicked, point: " + movingPointIndex);
+      }
+
+    }
+
+    function mouseReleased() {
+      console.log("mouse released");
+      movingPointIndex = -1;
+    }
+
+    function find_intersection(p0, p1, p2, p3) {
+      s10_x = p1.x - p0.x
+      s10_y = p1.y - p0.y
+      s32_x = p3.x - p2.x
+      s32_y = p3.y - p2.y
+      s02_x = p0.x - p2.x
+      s02_y = p0.y - p2.y
+
+      determenant = s10_x * s32_y - s32_x * s10_y
+
+      if (determenant == 0) {
+        console.log("collinear");
+        return null // collinear
+      }
+
+      determenant_is_positive = determenant > 0
+
+      s_numer = s10_x * s02_y - s10_y * s02_x
+
+      if ((s_numer < 0) == determenant_is_positive) {
+        //console.log("no collision 1");
+        return null // no collision
+      }
+
+      t_numer = s32_x * s02_y - s32_y * s02_x
+
+      if ((t_numer < 0) == determenant_is_positive) {
+        //console.log("no collision 2");
+        return null // no collision
+      }
+
+      if ((s_numer > determenant) == determenant_is_positive || (t_numer > determenant) == determenant_is_positive) {
+        //console.log("no collision 3");
+        return null // no collision
+      }
+
+      // collision detected
+      t = t_numer / determenant
+
+      var intersection_point = { x: p0.x + (t * s10_x), y: p0.y + (t * s10_y) };
+
+      return intersection_point
+    }
+  </script>
+  </head>
+  <body>
+
+  </body>
+</html>

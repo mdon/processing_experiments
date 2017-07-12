@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.js"></script>
+<!--    <script src="a.js"></script>  -->
+  <script>
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      newLine = false;
+      fromX = 0;
+      fromY = 0;
+      lines = [];
+    }
+
+    function draw() {
+      background("white")
+      stroke("blue")
+
+      for (i = 0; i < lines.length; i = i + 4) {
+        line(lines[i], lines[i+1], lines[i+2], lines[i+3])
+
+        if (int(dist(lines[i], lines[i+1], mouseX, mouseY)) <= 10)
+          ellipse(lines[i], lines[i+1], 10);
+
+        if (int(dist(lines[i+2], lines[i+3], mouseX, mouseY)) <= 10)
+          ellipse(lines[i+2], lines[i+3], 10);
+
+        if (mouseIsPressed) {
+          if (int(dist(lines[i], lines[i+1], mouseX, mouseY)) <= 10) {
+            //ellipse(mouseX, mouseY, 1);
+            lines[i] = mouseX
+            lines[i+1] = mouseY
+          }
+
+          if (int(dist(lines[i+2], lines[i+3], mouseX, mouseY)) <= 10) {
+            //ellipse(mouseX, mouseY, 1);
+            ellipse(lines[i+2], lines[i+3], 10);
+            lines[i+2] = mouseX
+            lines[i+3] = mouseY
+          }
+        }
+        //stroke("gray")
+        //line(mouseX, mouseY, lines[i], lines[i+1])
+        //line(mouseX, mouseY, lines[i+2], lines[i+3])
+        //text(abs(mouseX - lines[i]) + ", " + abs(mouseY - lines[i+1]), )
+      }
+
+      if (newLine) {
+        stroke("red")
+        line(fromX, fromY, mouseX, mouseY);
+        ellipse(fromX, fromY, 5);
+      }
+
+    }
+
+    function mouseClicked() {
+      if (newLine == false)  {
+        fromX = mouseX;
+        fromY = mouseY;
+        newLine = true;
+      } else {
+        lines.push(fromX);
+        lines.push(fromY);
+        lines.push(mouseX);
+        lines.push(mouseY);
+        newLine = false;
+      }
+      ellipse(mouseX, mouseY, 5);
+    }
+  </script>
+  </head>
+  <body>
+
+  </body>
+</html>
