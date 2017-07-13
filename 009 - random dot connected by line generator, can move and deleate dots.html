@@ -55,9 +55,10 @@
         //strokeWeight(20);
         point(p.x, p.y);
         stroke("red")
-        text("id: " + p.i, p.x+50, p.y)
-        text("next: " + p.next.i, p.x+50, p.y+10)
-        text("last: " + p.last.i, p.x+50, p.y+20)
+        ellipse(p.x, p.y, 10);
+        //text("id: " + p.i, p.x+50, p.y)
+        //text("next: " + p.next.i, p.x+50, p.y+10)
+        //text("last: " + p.last.i, p.x+50, p.y+20)
         stroke("blue")
         //strokeWeight(5);
         if (p.next) {

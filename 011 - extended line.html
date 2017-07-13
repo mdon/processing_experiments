@@ -11,7 +11,7 @@
   <script>
     'use strict';
 
-    var determenant;
+    var denominator;
     var newLine = false;
     var fromX = 0;
     var fromY = 0;
@@ -19,7 +19,7 @@
     var movingPointIndex = -1;
 
     var s10_x, s10_y, s32_x, s32_y, s02_x, s02_y;
-    var determenant_is_positive, s_numer, t_numer, t;
+    var denominator_is_positive, s_numer, t_numer, t;
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
@@ -64,10 +64,10 @@
         }
       }
 
-      if (determenant) {
+      if (denominator) {
         noStroke();
-        text("determenant: " + determenant, 10, 10);
-        text("determenant_is_positive: " + determenant_is_positive, 10, 20);
+        text("denominator: " + denominator, 10, 10);
+        text("denominator_is_positive: " + denominator_is_positive, 10, 20);
         text("s_numer: " + s_numer, 10, 30);
         text("t_numer: " + t_numer, 10, 40);
         text("t: " + t, 10, 50);
@@ -176,30 +176,30 @@
       s02_x = p0.x - p2.x
       s02_y = p0.y - p2.y
 
-      determenant = s10_x * s32_y - s32_x * s10_y
+      denominator = s10_x * s32_y - s32_x * s10_y
 
-      if (determenant == 0) {
+      if (denominator == 0) {
         console.log("collinear");
         return null // collinear
       }
 
-      determenant_is_positive = determenant > 0
+      denominator_is_positive = denominator > 0
 
       s_numer = s10_x * s02_y - s10_y * s02_x
 
-      if ((s_numer < 0) == determenant_is_positive) {
+      if ((s_numer < 0) == denominator_is_positive) {
         //console.log("no collision 1");
         return null // no collision
       }
 
       t_numer = s32_x * s02_y - s32_y * s02_x
 
-      if ((t_numer < 0) == determenant_is_positive) {
+      if ((t_numer < 0) == denominator_is_positive) {
         //console.log("no collision 2");
         return null // no collision
       }
 
-      if ((s_numer > determenant) == determenant_is_positive || (t_numer > determenant) == determenant_is_positive) {
+      if ((s_numer > denominator) == denominator_is_positive || (t_numer > denominator) == denominator_is_positive) {
         //console.log("no collision 3");
         return null // no collision
       }
