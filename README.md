@@ -29,8 +29,8 @@ http://htmlpreview.github.io/?raw.githubusercontent.com/mdon/processing_experime
 10) Feed the rectangle:
 http://htmlpreview.github.io/?raw.githubusercontent.com/mdon/processing_experiments/master/010%20-%20feed%20the%20rectangles%20game.html
 
-11) Extending and calculating crossing between two lines:
-http://htmlpreview.github.com/?raw.githubusercontent.com/mdon/processing_experiments/master/011%20-%20extended%20line.html
+11) Finding intersection between two lines:
+http://htmlpreview.github.io/?raw.githubusercontent.com/mdon/processing_experiments/master/011%20-%20finding%20line%20segment%20intersection.html
 
 12) finding area of a polygon using determinants:
 http://htmlpreview.github.io/?raw.githubusercontent.com/mdon/processing_experiments/master/012%20-%20determinant%20area%20calculator.html
